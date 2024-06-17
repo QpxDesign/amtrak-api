@@ -4,16 +4,30 @@ const amtrak = require("amtrak"); // Imports the library as `amtrak`
 const { fetchAllTrains } = require("amtrak");
 
 router.get("/", function (req, res, next) {
-  fetchAllTrains().then((trains) => {
-    var a = [];
-    Object.keys(trains).forEach((item) => {
-      a = a.concat(trains[item]);
-    });
+  try {
+    fetchAllTrains()
+      .then((trains) => {
+        var a = [];
+        Object.keys(trains).forEach((item) => {
+          a = a.concat(trains[item]);
+        });
+        res.send({
+          status: "worked",
+          data: a,
+        });
+      })
+      .catch((e) => {
+        res.send({
+          status: "failed",
+          data: [],
+        });
+      });
+  } catch {
     res.send({
-      status: "worked",
-      data: a,
+      status: "failed",
+      data: [],
     });
-  });
+  }
 });
 
 module.exports = router;
